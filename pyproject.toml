@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "hexlet-code"
+version = "0.1.0"
+description = "CLI utility that downloads a web page and saves it as a file in indicated directory."
+authors = ["algrince"]
+packages = [
+	{ include = 'page-loader'}, 
+]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+argparse = "^1.4.0"
+
+[tool.poetry.dev-dependencies]
+flake8 = "^5.0.4"
+pytest = "^7.2.0"
+pytest-cov = "^4.0.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
