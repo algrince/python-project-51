@@ -4,7 +4,7 @@ version = "0.1.0"
 description = "CLI utility that downloads a web page and saves it as a file in indicated directory."
 authors = ["algrince"]
 packages = [
-	{ include = 'page-loader'}, 
+	{ include = 'page_loader'}, 
 ]
 
 [tool.poetry.dependencies]
