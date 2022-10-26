@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import requests   # noqa: F401
+import requests
 import os
 import re
 
@@ -11,6 +11,9 @@ default_path = os.getcwd()
 def download(url, path=default_path):
     file_name = make_file_name(url)
     output_path = os.path.join(path, file_name)
+    with open(output_path, 'w') as output_file:
+        page = requests.get(url)
+        output_file.write(page)
     return output_path
 
 
