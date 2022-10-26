@@ -1,16 +1,18 @@
-#ª/usr/bin/env python3
+#!/usr/bin/env python3
 
-import requests
+import requests   # noqa: F401
 import os
 import re
 
 
 default_path = os.getcwd()
 
+
 def download(url, path=default_path):
     file_name = make_file_name(url)
     output_path = os.path.join(path, file_name)
     return output_path
+
 
 def make_file_name(url):
     url_root, ext = os.path.splitext(url)
