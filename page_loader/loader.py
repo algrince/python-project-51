@@ -15,15 +15,8 @@ def download(url, path=default_path):
 def make_file_name(url):
     url_root, ext = os.path.splitext(url)
     url_wo_scheme = url_root.split(':')[1]
-    url_with_symb = url_with_symb[2:]
+    url_with_symb = url_wo_scheme[2:]
     url_wo_symb = re.sub('[^a-zA-Z0-9]', '-', url_with_symb)
-    file_name = add_ext(url_wo_symb)
-    return file_name
-
-
-def add_ext(root):
     file_ext = '.html'
-    if root[-5:] == file_ext:
-        return root
-    else: 
-        return root + file_ext
+    file_name = url_wo_symb + file_ext
+    return file_name
