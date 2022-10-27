@@ -13,7 +13,7 @@ def download(url, path=default_path):
     output_path = os.path.join(path, file_name)
     with open(output_path, 'w') as output_file:
         page = requests.get(url)
-        output_file.write(page)
+        output_file.write(page.text)
     return output_path
 
 

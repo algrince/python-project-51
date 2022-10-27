@@ -2,6 +2,7 @@
 
 import argparse
 import os
+from page_loader.page_loader import download
 
 
 DESCRIPTION = "downloads a web page and saves it in a dictory"
@@ -11,7 +12,6 @@ DIRECTORY_DESCR = 'set path to the output directory (default: directory of launc
 parser = argparse.ArgumentParser(description=DESCRIPTION)
 parser.add_argument(
     '-o', '--output',
-    metavar='DIRECTORY',
     default=os.getcwd(),
     help=DIRECTORY_DESCR
 )
@@ -24,8 +24,9 @@ parser.add_argument(
 
 
 def main():
-    # args = parser.parse_args()
-    pass
+    args = parser.parse_args()
+    file_path = download(args.url, args.output)
+    print(file_path)
 
 
 if __name__ == '__main__':
