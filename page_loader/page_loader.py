@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 from bs4 import BeautifulSoup
+import urllib.parse
 import requests
 import os
 import re
@@ -14,35 +15,79 @@ def download(url, path=default_path):
     file_name = make_file_name(url)
     output_path = os.path.join(path, file_name)
     with open(output_path, 'w') as output_file:
-        page = requests.get(url).text
-        soup = BeautifulSoup(page, 'html.parser')
+        page = requests.get(url) 
+        soup = BeautifulSoup(page.text, 'html.parser')
         output_file.write(soup.prettify())
+    save_content(url, file_path)
     return output_path
 
 
-def save_content(url, file_path):
+def save_content(url, file_path, page):
     '''Saves additional content from the page'''
     folder_path = create_named_dir(url, file_path)
-    save_img(file_path, folder_path)
+    images = page.findALL('img')
+    for image in images:
+        src = image['src']
+        src_url = check_domain(url, src)
+        if src_url is None:
+            continue
+        else:
+            img_output_path = dowload_img(src_url, folder_path)
+            
+
+def dowload_img(src_url, folder_path):
+    '''Dowloads and saves as a png file an image'''
+    img_f_name = make_file_name(src_url, file_ext='.png')
+    img_output_path = os.path.join(folder_path, img_f_name)
+    with open(img_output_path, 'wb') as img_file:
+        img = requests.get(src_url)
+        content_file.write(img.content)
+    return img_output_path
 
 
-def save_img(file_path, folder_path):
-    pass
+def replace_src(file_path, img_output_path, orig_src):
+    '''Replaces src'''
+    with open(file_path, 'w') as f:
+        base_file = f.read()
+        tag = base_file.find('img', src=orig_src)
+        tag['src'] = img_output_path    
+
+
+def check_domain(url, src):
+    '''Checks that content belongs to the same domain and if it is abolute'''
+    url_parse = urlparse(url)
+    url_netloc = url_parse.netloc
+    url_scheme = url_parse.scheme
+    src_netloc = urlparse(src).netloc
+    if url_netloc == src_netloc:
+        return src
+    else:
+        is_absolute = check_src(src)
+        if is_absolute:
+            return None
+        else:
+            url_base = url_scheme + '://' + url_netloc
+            joined_src = urljoin(url_base, src)
+            return joined_src
+
+
+def check_src(src):
+    '''Checks if src link is absolute'''
+    match = re.search('^http', src)
+    return False if match is None else True
 
 
 def make_name(url):
     '''Modifies the url for naming'''
     url_root, ext = os.path.splitext(url)
-    url_wo_scheme = url_root.split(':')[1]
-    url_with_symb = url_wo_scheme[2:]
+    url_with_scheme = url_root.split('://')[1]
     url_wo_symb = re.sub('[^a-zA-Z0-9]', '-', url_with_symb)
     return url_wo_symb
 
 
-def make_file_name(url):
+def make_file_name(url, file_ext='.html'):
     '''Makes a name for a new html file'''
     file_root = make_name(url)
-    file_ext = '.html'
     file_name = file_root + file_ext
     return file_name
 
