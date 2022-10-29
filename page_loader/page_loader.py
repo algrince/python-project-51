@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 from bs4 import BeautifulSoup
-import urllib.parse
+from urllib.parse import urlparse, urljoin
 import requests
 import os
 import re
@@ -18,14 +18,14 @@ def download(url, path=default_path):
         page = requests.get(url) 
         soup = BeautifulSoup(page.text, 'html.parser')
         output_file.write(soup.prettify())
-    save_content(url, file_path)
+    save_content(url, path, soup)
     return output_path
 
 
-def save_content(url, file_path, page):
+def save_content(url, path, soup):
     '''Saves additional content from the page'''
-    folder_path = create_named_dir(url, file_path)
-    images = page.findALL('img')
+    folder_path = create_named_dir(url, path)
+    images = soup.find_all('img')
     for image in images:
         src = image['src']
         src_url = check_domain(url, src)
@@ -80,9 +80,9 @@ def check_src(src):
 def make_name(url):
     '''Modifies the url for naming'''
     url_root, ext = os.path.splitext(url)
-    url_with_scheme = url_root.split('://')[1]
-    url_wo_symb = re.sub('[^a-zA-Z0-9]', '-', url_with_symb)
-    return url_wo_symb
+    url_no_scheme = url_root.split('://')[1]
+    url_no_symb = re.sub('[^a-zA-Z0-9]', '-', url_no_scheme)
+    return url_no_symb
 
 
 def make_file_name(url, file_ext='.html'):

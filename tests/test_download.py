@@ -24,7 +24,7 @@ def test_name_maker():
 
 
 def test_download():
-    fixture_path = './tests/fixtures/expected_file.html'
+    fixture_path = './tests/fixtures/source_file.html'
     with open(fixture_path, 'r') as f:
         fixture = f.read()
     with requests_mock.Mocker() as m:
