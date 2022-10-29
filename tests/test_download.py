@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
-from page_loader.page_loader import download, make_file_name
+from page_loader.page_loader import download, download_img
+from urllib.parse import urljoin
 import os
 import tempfile
 import requests
@@ -11,8 +12,8 @@ import requests_mock
 TEST_URL = 'https://test.page/project'
 EXPECTED_FILE = 'test-page-project.html'
 SOURCE = './tests/fixtures/source_file.html'
-EXPECTED = '.tests/fixtures/expected_file.html'
-IMG_FIXTURE = '.tests/fixtures/img_fixture.html'
+EXPECTED = './tests/fixtures/expected_file.html'
+IMG_FIXTURE = './tests/fixtures/img_fixture.html'
 
 def test_path():
     fixture_path = SOURCE
@@ -43,14 +44,14 @@ def test_files():
 
 
 def test_img_download():
-    image = '.tests/fixtures/python.png'
+    image = './tests/fixtures/python.png'
     with open(image, 'rb') as f:
         png_fixture = f.read()
     with requests_mock.Mocker() as m:
         src = 'python.png'
         img_url = urljoin(TEST_URL, src)
         m.get(img_url, content=png_fixture)
-        with tempfile.TemporaryDicrectory() as tmpdir:
+        with tempfile.TemporaryDirectory() as tmpdir:
             file_path = shutil.copy(IMG_FIXTURE, tmpdir)
             output_path = download_img(src, img_url, tmpdir, file_path)
             with open (output_path, 'rb') as d:

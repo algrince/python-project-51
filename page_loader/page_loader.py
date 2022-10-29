@@ -18,8 +18,8 @@ def download(url, path=default_path):
     with open(output_path, 'w') as output_file:
         page = requests.get(url) 
         soup = BeautifulSoup(page.text, 'html.parser')
-        output_file.write(soup.prettify())
-    save_content(url, path, output_path, soup)
+        soup_changed = save_content(url, path, output_path, soup)
+        output_file.write(soup_changed.prettify())
     return output_path
 
 
@@ -33,33 +33,32 @@ def save_content(url, path, output_path, soup):
         if src_url is None:
             continue
         else:
-            img_output_path = dowload_img(src, src_url, folder_path, output_path)
+            img_output_path = download_img(src, src_url, folder_path, output_path)
+            soup = replace_src(soup, img_output_path, orig_src)
+    return soup
             
 
-def dowload_img(src, src_url, folder_path, output_path):
+def download_img(src, src_url, folder_path, output_path):
     '''Dowloads and saves as a png file an image'''
     img_f_name = make_file_name(src_url, file_ext='.png')
     img_output_path = os.path.join(folder_path, img_f_name)
     with open(img_output_path, 'wb') as img_file:
         img = requests.get(src_url)
-        content_file.write(img.content)
-    replace_src(output_path, img_output_path, src)
+        img_file.write(img.content)
     return img_output_path
 
 
-def replace_src(file_path, img_output_path, orig_src):
+def replace_src(soup, img_output_path, orig_src):
     '''Replaces src'''
-    with open(file_path, 'w') as f:
-        base_file = f.read()
-        tag = base_file.find('img', src=orig_src)
-        tag['src'] = img_output_path    
+    tag = soup.find('img', src=orig_src)
+    tag['src'] = img_output_path
+    return soup
 
 
 def check_domain(url, src):
     '''Checks that content belongs to the same domain and if it is abolute'''
     url_parse = urlparse(url)
     url_netloc = url_parse.netloc
-    url_scheme = url_parse.scheme
     src_netloc = urlparse(src).netloc
     if url_netloc == src_netloc:
         return src
@@ -68,8 +67,7 @@ def check_domain(url, src):
         if is_absolute:
             return None
         else:
-            url_base = url_scheme + '://' + url_netloc
-            joined_src = urljoin(url_base, src)
+            joined_src = urljoin(url, src)
             return joined_src
 
 
