@@ -16,7 +16,7 @@ def download(url, path=default_path):
     file_name = make_file_name(url)
     output_path = os.path.join(path, file_name)
     with open(output_path, 'w') as output_file:
-        page = requests.get(url) 
+        page = requests.get(url)
         soup = BeautifulSoup(page.text, 'html.parser')
         soup_changed = save_content(url, path, output_path, soup)
         output_file.write(soup_changed.prettify())
@@ -33,10 +33,14 @@ def save_content(url, path, output_path, soup):
         if src_url is None:
             continue
         else:
-            img_output_path = download_img(src, src_url, folder_path, output_path)
-            soup = replace_src(soup, img_output_path, orig_src)
+            img_output_path = download_img(
+                src, src_url,
+                folder_path,
+                output_path
+            )
+            soup = replace_src(soup, img_output_path, src)
     return soup
-            
+
 
 def download_img(src, src_url, folder_path, output_path):
     '''Dowloads and saves as a png file an image'''
