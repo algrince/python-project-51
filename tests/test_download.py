@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from page_loader.page_loader import download, download_img
+from page_loader.loader import download, download_cnt
 from urllib.parse import urljoin
 import os
 import tempfile
@@ -53,7 +53,10 @@ def test_img_download():
         m.get(img_url, content=png_fixture)
         with tempfile.TemporaryDirectory() as tmpdir:
             file_path = shutil.copy(IMG_FIXTURE, tmpdir)
-            output_path = download_img(src, img_url, tmpdir, file_path)
+            sources = [src, img_url]
+            paths = [file_path, tmpdir]
+            types = ['img', 'png']
+            output_path = download_cnt(sources, paths, types)
             with open (output_path, 'rb') as d:
                 downloaded_img = d.read()
 

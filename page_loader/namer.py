@@ -14,6 +14,9 @@ def make_name(url):
 
 def make_file_name(url, file_ext='.html'):
     '''Makes a name for a new html file'''
+    if file_ext == 'link':
+        url_root, ext = os.path.splitext(url)
+        file_ext = ext
     file_root = make_name(url)
     file_name = file_root + file_ext
     return file_name
