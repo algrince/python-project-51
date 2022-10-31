@@ -56,7 +56,7 @@ def test_img_download():
             sources = [src, img_url]
             paths = [file_path, tmpdir]
             types = ['img', 'png']
-            output_path = download_cnt(sources, paths, types)
+            output_path = download_cnt(sources, tmpdir, types)
             with open (output_path, 'rb') as d:
                 downloaded_img = d.read()
 

@@ -1,17 +1,15 @@
 #!/usr/bin/env python3
 
 
-from bs4 import BeautifulSoup
 from urllib.parse import urlparse, urljoin
 import re
-
 
 
 def replace_src(soup, cnt_output_path, orig_src, types):
     '''Replaces src'''
     type_, atr = types
     tag = soup.find(type_, src=orig_src)
-    tag[atr] = img_output_path
+    tag[atr] = cnt_output_path
     return soup
 
 
