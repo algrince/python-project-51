@@ -6,7 +6,9 @@ import re
 
 def make_name(url):
     '''Modifies the url for naming'''
+    print(url)
     url_root, ext = os.path.splitext(url)
+    print(url_root, ext)
     url_no_scheme = url_root.split('://')[1]
     url_no_symb = re.sub('[^a-zA-Z0-9]', '-', url_no_scheme)
     return url_no_symb
@@ -14,12 +16,13 @@ def make_name(url):
 
 def make_file_name(url, file_ext='.html'):
     '''Makes a name for a new html file'''
-    if file_ext == 'link':
-        url_root, ext = os.path.splitext(url)
-        file_ext = ext
+    url_root, ext = os.path.splitext(url)
+    if ext == '':
+        ext = '.html'
+    file_ext = ext
     file_root = make_name(url)
     file_name = file_root + file_ext
-    return file_name
+    return (file_name, ext)
 
 
 def create_named_dir(url, path):

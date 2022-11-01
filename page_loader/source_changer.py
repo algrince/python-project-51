@@ -9,7 +9,10 @@ def replace_src(soup, cnt_output_path, orig_src, types):
     '''Replaces src'''
     type_, atr = types
     tag = soup.find(type_, src=orig_src)
-    tag[atr] = cnt_output_path
+    try:
+        tag[atr] = cnt_output_path
+    except TypeError:
+        pass
     return soup
 
 

@@ -2,7 +2,7 @@
 
 import argparse
 import os
-from page_loader.page_loader import download
+from page_loader.loader import download
 
 
 DESCRIPTION = "downloads a web page and saves it in a dictory"
