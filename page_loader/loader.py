@@ -9,7 +9,7 @@ import os
 
 
 default_path = os.getcwd()
-logging.basicConfig(level = logging.INFO)
+logging.basicConfig(level=logging.INFO)
 
 exts = {'img': '.png',
         'script': '.js',
@@ -34,30 +34,34 @@ def download(url, path=default_path):
         page = requests.get(url)
         soup = BeautifulSoup(page.text, 'html.parser')
         output_file.write(soup.prettify())
-    
+
     logging.info(f' download complete: html file {output_file_path}')
 
     paths = [path, output_file_path]
-    folder_name = save_content(url, paths, soup)
+    folder_name = save_content(url, paths, soup)  # noqa: F841
 
     logging.info(' download completed')
     return output_file_path
 
 
-def save_content(url, paths, soup):
+def save_content(  # noqa: C901
+        url, paths, soup):
     '''Saves additional content from the page'''
     root_path, output_file_path = paths
     folder_name, folder_path = create_named_dir(url, root_path)
+
     for content in contents:
         type_, attribute = content
         tabs = soup.find_all(type_)
         for tab in tabs:
+
             try:
                 source = tab[attribute]
                 source_url = check_domain(url, source)
             except KeyError:
                 logging.warning(f" found '{type_}' tag with no requiered attribute ('{attribute}'") # noqa
                 source_url = None
+
             if source_url is None:
                 continue
             else:
@@ -74,7 +78,7 @@ def save_content(url, paths, soup):
                         source,
                         content)
         logging.info(f' download complete: {type_} content')
-    
+
     with open(output_file_path, 'w') as output_file:
         output_file.write(soup.prettify())
     logging.info(f' html file {output_file_path} rewritten')
@@ -102,5 +106,3 @@ def download_cnt(src_url, folder_name, folder_path, tag):
 def choose_mode(ext):
     '''Choses a write mode for a file'''
     return 'w' if ext == '.html' else 'wb'
-
-

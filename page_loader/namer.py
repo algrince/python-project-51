@@ -10,7 +10,7 @@ exts = {'img': '.png',
         'link': '.html'}
 
 
-def make_name(url, primary_file=False): # primary file: html 
+def make_name(url, primary_file=False):  # primary file: html
     '''Modifies the url for naming'''
     if primary_file:
         url_root = url
@@ -21,11 +21,11 @@ def make_name(url, primary_file=False): # primary file: html
     return url_no_symb.rstrip('-')
 
 
-def make_file_name(url, tag='link'):
+def make_file_name(url, tag='link', primary_file=False):
     '''Makes a name for a new html file'''
     url_root, ext = os.path.splitext(url)
     file_ext = make_ext(ext, tag)
-    file_root = make_name(url, primary_file=False)
+    file_root = make_name(url, primary_file)
     file_name = file_root + file_ext
     return (file_name, ext)
 
@@ -33,9 +33,9 @@ def make_file_name(url, tag='link'):
 def make_ext(ext, tag):
     if ext == '' or ext not in permitted:
         return exts[tag]
-    else: 
-        return ext 
-        
+    else:
+        return ext
+
 
 def create_named_dir(url, path):
     '''Creates a directory for content'''

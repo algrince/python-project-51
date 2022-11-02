@@ -73,8 +73,7 @@ def test_img_download():
         img_url = urljoin(URL['html'], src)
         m.get(img_url, content=png_fixture)
         with tempfile.TemporaryDirectory() as tmpdir:
-            filedir = os.mkdir(tmpdir + '\test_file')
-            output_path = download_cnt(img_url, tmpdir, filedir, 'img')
+            output_path = download_cnt(img_url, tmpdir, tmpdir, 'img')
             with open (output_path, 'rb') as d:
                 downloaded_img = d.read()
 

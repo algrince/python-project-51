@@ -8,7 +8,10 @@ import re
 def replace_src(soup, cnt_output_name, orig_src, types):
     '''Replaces src'''
     type_, atr = types
-    tag = soup.find(type_, src=orig_src)
+    if atr == 'href':
+        tag = soup.find(type_, href=orig_src)
+    else:
+        tag = soup.find(type_, src=orig_src)
     try:
         tag[atr] = cnt_output_name
     except TypeError:
