@@ -73,7 +73,8 @@ def test_img_download():
         img_url = urljoin(URL['html'], src)
         m.get(img_url, content=png_fixture)
         with tempfile.TemporaryDirectory() as tmpdir:
-            output_path = download_cnt(img_url, tmpdir, 'img')
+            filedir = os.mkdir(tmpdir + '\test_file')
+            output_path = download_cnt(img_url, tmpdir, filedir, 'img')
             with open (output_path, 'rb') as d:
                 downloaded_img = d.read()
 
@@ -97,8 +98,9 @@ def test_saver(fake_sources):
         url = URL['html']
         paths = [tmpdir, output_file_path]
         folder = save_content(url, paths, soup)
+        folder_path = os.path.join(tmpdir, folder)
 
-        assert 4 == len(os.listdir(folder))
+        assert 4 == len(os.listdir(folder_path))
         
         with open(output_file_path, 'r') as new, open(FULL_EXPECTED, 'r') as exp:
             assert new.read() == exp.read()

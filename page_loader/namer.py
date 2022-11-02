@@ -10,23 +10,22 @@ exts = {'img': '.png',
         'link': '.html'}
 
 
-def make_name(url, primary_file=True): # primary file: html or folder 
+def make_name(url, primary_file=False): # primary file: html 
     '''Modifies the url for naming'''
-    if primary_file is False:
-        url_root, url_ext = os.path.splitext(url)
-    else:
+    if primary_file:
         url_root = url
+    else:
+        url_root, url_ext = os.path.splitext(url)
     url_no_scheme = url_root.split('://')[1]
     url_no_symb = re.sub('[^a-zA-Z0-9]', '-', url_no_scheme)
     return url_no_symb.rstrip('-')
 
 
-def make_file_name(url, tag='link',
-                    primary_file=True):
+def make_file_name(url, tag='link'):
     '''Makes a name for a new html file'''
     url_root, ext = os.path.splitext(url)
     file_ext = make_ext(ext, tag)
-    file_root = make_name(url, primary_file)
+    file_root = make_name(url, primary_file=False)
     file_name = file_root + file_ext
     return (file_name, ext)
 
@@ -34,12 +33,14 @@ def make_file_name(url, tag='link',
 def make_ext(ext, tag):
     if ext == '' or ext not in permitted:
         return exts[tag]
+    else: 
+        return ext 
         
 
 def create_named_dir(url, path):
     '''Creates a directory for content'''
-    dir_root = make_name(url)
+    dir_root = make_name(url, primary_file=True)
     dir_name = dir_root + '_files'
     dir_path = os.path.join(path, dir_name)
     os.mkdir(dir_path)
-    return dir_path
+    return [dir_name, dir_path]
