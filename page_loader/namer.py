@@ -3,27 +3,38 @@
 import os
 import re
 
+permitted = {'.png', '.jpeg', '.css', '.js'}
 
-def make_name(url):
+exts = {'img': '.png',
+        'script': '.js',
+        'link': '.html'}
+
+
+def make_name(url, primary_file=True): # primary file: html or folder 
     '''Modifies the url for naming'''
-    print(url)
-    url_root, ext = os.path.splitext(url)
-    print(url_root, ext)
+    if primary_file is False:
+        url_root, url_ext = os.path.splitext(url)
+    else:
+        url_root = url
     url_no_scheme = url_root.split('://')[1]
     url_no_symb = re.sub('[^a-zA-Z0-9]', '-', url_no_scheme)
-    return url_no_symb
+    return url_no_symb.rstrip('-')
 
 
-def make_file_name(url, file_ext='.html'):
+def make_file_name(url, tag='link',
+                    primary_file=True):
     '''Makes a name for a new html file'''
     url_root, ext = os.path.splitext(url)
-    if ext == '':
-        ext = '.html'
-    file_ext = ext
-    file_root = make_name(url)
+    file_ext = make_ext(ext, tag)
+    file_root = make_name(url, primary_file)
     file_name = file_root + file_ext
     return (file_name, ext)
 
+
+def make_ext(ext, tag):
+    if ext == '' or ext not in permitted:
+        return exts[tag]
+        
 
 def create_named_dir(url, path):
     '''Creates a directory for content'''

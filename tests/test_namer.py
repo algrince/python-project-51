@@ -16,9 +16,8 @@ def test_filename_maker():
     url3 = 'https://www.w3schools.com/python/ref_string_split.asp'
     file3 = 'www-w3schools-com-python-ref-string-split.html'
 
-    assert file1 == make_file_name(url1)
-    assert file2 == make_file_name(url2, file_ext='.png')
-    assert file3 == make_file_name(url3)
+    assert file1 == make_file_name(url1)[0]
+    assert file3 == make_file_name(url3)[0]
 
 
 def test_name_maker():
