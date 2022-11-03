@@ -4,7 +4,7 @@ from page_loader.logger import logging
 import os
 import re
 
-permitted = {'.png', '.jpeg', '.css', '.js'}
+permitted = {'.png', '.jpeg', '.jpg', '.css', '.js'}
 
 exts = {'img': '.png',
         'script': '.js',
