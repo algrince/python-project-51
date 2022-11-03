@@ -4,12 +4,12 @@ from bs4 import BeautifulSoup
 from page_loader.namer import make_file_name, create_named_dir
 from page_loader.source_changer import check_domain, replace_src
 from page_loader.logger import logging
+from progress.bar import ChargingBar
 import requests
 import os
 
 
 default_path = os.getcwd()
-
 
 exts = {'img': '.png',
         'script': '.js',
@@ -57,13 +57,14 @@ def save_content(  # noqa: C901
     for content in contents:
         type_, attribute = content
         tabs = soup.find_all(type_)
+        bar = ChargingBar('Downloading:', max=len(tabs))
         for tab in tabs:
-
+            bar.next()
             try:
                 source = tab[attribute]
                 source_url = check_domain(url, source)
             except KeyError:
-                logging.warning(f"Found '{type_}' tag with no requiered atr ('{attribute}'") # noqa
+                # logging.warning(f"Found '{type_}' tag with no requiered atr ('{attribute}'") # noqa
                 source_url = None
 
             if source_url is None:
@@ -81,8 +82,8 @@ def save_content(  # noqa: C901
                         cnt_output_name,
                         source,
                         content)
+        bar.finish()
         logging.info(f'Download complete: {type_} content')
-
     write_file(output_file_path, soup)
 
     logging.info(f'html file {output_file_path} rewritten')
