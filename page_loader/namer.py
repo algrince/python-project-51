@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+from page_loader.logger import logging
 import os
 import re
 
@@ -42,5 +43,12 @@ def create_named_dir(url, path):
     dir_root = make_name(url, primary_file=True)
     dir_name = dir_root + '_files'
     dir_path = os.path.join(path, dir_name)
-    os.mkdir(dir_path)
+    try:
+        os.mkdir(dir_path)
+    except PermissionError as e:
+        logging.error(f'Permission denied to make a directory {dir_path}')
+        raise e
+    except OSError as e:
+        logging.error(e)
+        raise e
     return [dir_name, dir_path]

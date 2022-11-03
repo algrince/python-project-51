@@ -22,25 +22,29 @@ contents = [('img', 'src'),
 
 def download(url, path=default_path):
     '''Dowloands the page as html file (prettyfied by BS)'''
-    logging.info(f' requested url: {url}')
-    logging.info(f' output path: {path}')
+    logging.info(f'Requested url: {url}')
+    logging.info(f'Output path: {path}')
 
     file_name = make_file_name(url, primary_file=True)[0]
     output_file_path = os.path.join(path, file_name)
 
-    logging.info(f' write html file: {output_file_path}')
+    logging.info(f'Write html file: {output_file_path}')
 
-    with open(output_file_path, 'w') as output_file:
+    try:
         page = requests.get(url)
-        soup = BeautifulSoup(page.text, 'html.parser')
-        output_file.write(soup.prettify())
+        page.raise_for_status()
+    except requests.ConnectionError as e:
+        logging.error('Connection error! Check your Internet connection.')
+        raise e
+    soup = BeautifulSoup(page.text, 'html.parser')
+    write_file(output_file_path, soup)
 
-    logging.info(f' download complete: html file {output_file_path}')
+    logging.info(f'Download complete: html file {output_file_path}')
 
     paths = [path, output_file_path]
     folder_name = save_content(url, paths, soup)  # noqa: F841
 
-    logging.info(' download completed')
+    logging.info('Download complete')
     return output_file_path
 
 
@@ -59,7 +63,7 @@ def save_content(  # noqa: C901
                 source = tab[attribute]
                 source_url = check_domain(url, source)
             except KeyError:
-                logging.warning(f" found '{type_}' tag with no requiered attribute ('{attribute}'") # noqa
+                logging.warning(f"Found '{type_}' tag with no requiered atr ('{attribute}'") # noqa
                 source_url = None
 
             if source_url is None:
@@ -77,11 +81,11 @@ def save_content(  # noqa: C901
                         cnt_output_name,
                         source,
                         content)
-        logging.info(f' download complete: {type_} content')
+        logging.info(f'Download complete: {type_} content')
 
-    with open(output_file_path, 'w') as output_file:
-        output_file.write(soup.prettify())
-    logging.info(f' html file {output_file_path} rewritten')
+    write_file(output_file_path, soup)
+
+    logging.info(f'html file {output_file_path} rewritten')
     return folder_name
 
 
@@ -106,3 +110,18 @@ def download_cnt(src_url, folder_name, folder_path, tag):
 def choose_mode(ext):
     '''Choses a write mode for a file'''
     return 'w' if ext == '.html' else 'wb'
+
+
+def write_file(output_file_path, soup):
+    try:
+        with open(output_file_path, 'w') as output_file:
+            output_file.write(soup.prettify())
+    except PermissionError as e:
+        logging.error(f'Permission denied to save as {output_file_path}')
+        raise e
+    except FileNotFoundError as e:
+        logging.error(f'File not found in {output_file_path}')
+        raise e
+    except OSError as e:
+        logging.error(e)
+        raise e
