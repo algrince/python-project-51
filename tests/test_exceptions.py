@@ -15,10 +15,11 @@ def fake_source(requests_mock):
     requests_mock.get(BAD_URL, text='', status_code=404)
     requests_mock.get(URL, text='')
 
+
 def test_status_code(fake_source):
     with tempfile.TemporaryDirectory() as tmpdir:
         with pytest.raises(requests.HTTPError):
-            file_path = download(BAD_URL, tmpdir)
+            file_path = download(BAD_URL, tmpdir)  # noqa: F841
 
 
 def test_connection():
@@ -26,5 +27,4 @@ def test_connection():
         with requests_mock.Mocker() as m:
             m.register_uri('GET', URL, exc=requests.ConnectionError)
             with pytest.raises(requests.ConnectionError):
-                file_path = download(URL, tmpdir)
-
+                file_path = download(URL, tmpdir)  # noqa: F841

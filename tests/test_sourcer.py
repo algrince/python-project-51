@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 
-from page_loader.source_changer import replace_src, check_domain, check_src
+from page_loader.source_changer import check_domain, check_src
 
 TEST_URL = 'https://test-page.com'
+
 
 def test_absolute_src():
     abs_src = TEST_URL

@@ -2,7 +2,6 @@
 
 from page_loader.namer import make_name, make_file_name, create_named_dir
 import tempfile
-import os
 
 
 GENERIC_URL = 'https://docs.python.org/3/library/re.html'
@@ -20,6 +19,7 @@ def test_filename_maker():
     assert make_file_name(url2)[0] == file2
     assert make_file_name(url3)[0] == file3
 
+
 def test_name_maker():
     url_symb = 'https://www.google.com/search?q=patata&oq=patata&aqs=chrome' # noqa
     url_output1 = 'www-google-com-search-q-patata-oq-patata-aqs-chrome' # noqa
@@ -32,7 +32,7 @@ def test_name_maker():
 
 def test_named_dir_creator():
     with tempfile.TemporaryDirectory() as tmpdir:
-            expected_path = 'docs-python-org-3-library-re-html_files'
-            dir_path = create_named_dir(GENERIC_URL, tmpdir)[0]
+        expected_path = 'docs-python-org-3-library-re-html_files'
+        dir_path = create_named_dir(GENERIC_URL, tmpdir)[0]
 
-            assert dir_path == expected_path
+        assert dir_path == expected_path

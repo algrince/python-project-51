@@ -37,6 +37,7 @@ IMAGE = './tests/fixtures/python.png'
 
 FULL_EXPECTED = './tests/fixtures/full_expected.html'
 
+
 def test_path():
     fixture_path = SOURCE
     with open(fixture_path, 'r') as f:
@@ -74,7 +75,7 @@ def test_img_download():
         m.get(img_url, content=png_fixture)
         with tempfile.TemporaryDirectory() as tmpdir:
             output_path = download_cnt(img_url, tmpdir, tmpdir, 'img')
-            with open (output_path, 'rb') as d:
+            with open(output_path, 'rb') as d:
                 downloaded_img = d.read()
 
                 assert downloaded_img == png_fixture
@@ -100,7 +101,6 @@ def test_saver(fake_sources):
         folder_path = os.path.join(tmpdir, folder)
 
         assert 4 == len(os.listdir(folder_path))
-        
+
         with open(output_file_path, 'r') as new, open(FULL_EXPECTED, 'r') as exp:
             assert new.read() == exp.read()
-            
