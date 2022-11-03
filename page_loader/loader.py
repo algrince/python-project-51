@@ -3,13 +3,13 @@
 from bs4 import BeautifulSoup
 from page_loader.namer import make_file_name, create_named_dir
 from page_loader.source_changer import check_domain, replace_src
-import logging
+from page_loader.logger import logging
 import requests
 import os
 
 
 default_path = os.getcwd()
-logging.basicConfig(level=logging.INFO)
+
 
 exts = {'img': '.png',
         'script': '.js',
