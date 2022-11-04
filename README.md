@@ -7,9 +7,11 @@
 
 ## Description
 Page-loader is a CLI utility that downloads pages from the Internet to indicated directory. If there is no directory indicated to the utility, the download will be made to the directory *os.getcwd()*.
+
 The result of the download is: 
 - A html file that contains the main page. 
 - A sub-dictory that includes images *(.png, .jpeg)*, scripts *(.js)* and links *(.html, .css)* that are needed for opening the page. 
+
 **Only the content that is placed in the same source as the main page is downloaded**
 The progress is shown in the command line using logging and progress bar. When download in completed, the utility shows path to new generated file.
 
